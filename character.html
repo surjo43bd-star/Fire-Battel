@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIRE BATTEL | Character Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#08111b;color:white;font-family:Arial;overflow:hidden}
+#scene{position:fixed;inset:0}
+header{position:fixed;top:0;left:0;right:0;padding:20px;display:flex;justify-content:space-between;background:linear-gradient(#08111be8,transparent);z-index:2}
+.logo{font-size:23px;font-weight:900;color:#ffae32;letter-spacing:3px}
+.badge{background:#15283be8;padding:12px 18px;border-radius:20px}
+.left{position:fixed;left:20px;top:110px;width:210px;background:#101e30df;border:1px solid #52677b;border-radius:12px;padding:17px}
+.right{position:fixed;right:20px;top:110px;width:190px;background:#101e30df;border:1px solid #52677b;border-radius:12px;padding:17px}
+h2{color:#ffb342;font-size:17px}
+p{font-size:13px;color:#d1dce6}
+button{width:100%;padding:12px;margin:6px 0;border:1px solid #a67a35;border-radius:7px;background:#25364b;color:white;font-weight:bold;cursor:pointer}
+button.active,button:hover{background:#e99b32;color:#111}
+footer{position:fixed;bottom:0;left:0;right:0;text-align:center;padding:14px;background:#07111bd9;font-size:12px;color:#d4dce5}
+@media(max-width:600px){.left{left:8px;width:145px;top:90px;padding:10px}.right{right:8px;width:135px;top:90px;padding:10px}header{padding:12px}.logo{font-size:17px}}
+</style>
+</head>
+<body>
+<div id="scene"></div>
+<header>
+<div class="logo">🔥 FIRE BATTEL</div>
+<div class="badge">💎 100</div>
+</header>
+<div class="left">
+<h2>CHARACTER STUDIO</h2>
+<p>Choose your appearance</p>
+<button onclick="changeColor(0x435c43,this)" class="active">JUNGLE OUTFIT</button>
+<button onclick="changeColor(0x34465e,this)">TACTICAL BLUE</button>
+<button onclick="changeColor(0x66513b,this)">DESERT OUTFIT</button>
+<button onclick="changeColor(0x34363b,this)">SHADOW OUTFIT</button>
+</div>
+<div class="right">
+<h2>COLLECTION</h2>
+<button onclick="helmet()">HELMET</button>
+<button onclick="backpack()">BACKPACK</button>
+<button onclick="pose()">CHARACTER POSE</button>
+<button onclick="rotate()">CAMERA VIEW</button>
+</div>
+<footer>FIRE BATTEL • BANGLADESH CAMP • 3D CHARACTER PREVIEW</footer>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script>
+const root=document.getElementById("scene");
+if(!window.THREE){
+root.innerHTML="<p style='padding:40px'>3D library could not load. Check internet connection.</p>";
+}else{
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x9bb9bd);
+scene.fog=new THREE.Fog(0x9bb9bd,20,65);
+const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,100);
+camera.position.set(5,3.2,8);
+const renderer=new THREE.WebGLRenderer({antialias:false});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(1);
+root.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xe5f4ff,0x34412c,1.8));
+const sun=new THREE.DirectionalLight(0xffe1b1,2);
+sun.position.set(-5,10,6);scene.add(sun);
+const mat=c=>new THREE.MeshLambertMaterial({color:c});
+function add(parent,geo,color,x,y,z){
+const m=new THREE.Mesh(geo,mat(color));m.position.set(x,y,z);parent.add(m);return m;
+}
+const ground=add(scene,new THREE.PlaneGeometry(100,100),0x476344,0,-.1,0);
+ground.rotation.x=-Math.PI/2;
+const water=add(scene,new THREE.PlaneGeometry(50,9),0x397e9c,-15,-.06,-7);
+water.rotation.x=-Math.PI/2;
+for(let i=0;i<12;i++){
+let hill=add(scene,new THREE.ConeGeometry(6,11,7),i%2?0x526d49:0x3d6549,-25+i*5,4,-25);
+}
+for(let i=0;i<25;i++){
+let x=(Math.random()-.5)*45,z=(Math.random()-.5)*45;
+if(Math.abs(x)<5&&Math.abs(z)<7)continue;
+add(scene,new THREE.CylinderGeometry(.15,.22,2,6),0x63452c,x,1,z);
+add(scene,new THREE.ConeGeometry(1.5,3.5,7),0x205335,x,3.5,z);
+}
+const camp=add(scene,new THREE.BoxGeometry(7,3,5),0x938e70,-8,1.5,-3);
+add(scene,new THREE.BoxGeometry(7,.3,5),0x384a3b,-8,3.1,-3);
+const flag=add(scene,new THREE.BoxGeometry(1.5,.9,.08),0x087b43,-3,4,-2);
+add(scene,new THREE.CylinderGeometry(.05,.05,5,8),0xc9c9c9,-3.8,2.5,-2);
+add(scene,new THREE.SphereGeometry(.2,12,12),0xe52e37,-3,4,-1.94);
+
+const hero=new THREE.Group();scene.add(hero);
+const body=new THREE.Group();hero.add(body);
+let clothes=[];
+function piece(geo,c,x,y,z){
+let m=add(body,geo,c,x,y,z);clothes.push(m);return m;
+}
+piece(new THREE.BoxGeometry(.95,1.15,.48),0x435c43,0,1.55,0);
+piece(new THREE.SphereGeometry(.34,16,12),0xb77e59,0,2.43,0);
+piece(new THREE.BoxGeometry(.77,.18,.7),0x293b2c,0,2.69,0);
+piece(new THREE.BoxGeometry(.38,.76,.38),0x435c43,-.68,1.55,0);
+piece(new THREE.BoxGeometry(.38,.76,.38),0x435c43,.68,1.55,0);
+piece(new THREE.BoxGeometry(.38,.85,.42),0x293b45,-.25,.55,0);
+piece(new THREE.BoxGeometry(.38,.85,.42),0x293b45,.25,.55,0);
+piece(new THREE.BoxGeometry(.42,.18,.55),0x171c21,-.25,.08,.02);
+piece(new THREE.BoxGeometry(.42,.18,.55),0x171c21,.25,.08,.02);
+const pack=add(body,new THREE.BoxGeometry(.55,.85,.32),0x292f2a,0,1.65,-.38);
+const hat=add(body,new THREE.SphereGeometry(.39,12,8),0x343f32,0,2.7,0);
+hat.scale.y=.5;
+const visor=add(body,new THREE.BoxGeometry(.78,.08,.62),0x242d2a,0,2.65,0);
+const rifle=new THREE.Group();
+add(rifle,new THREE.BoxGeometry(.13,.14,1.15),0x252b2d,0,0,0);
+add(rifle,new THREE.BoxGeometry(.13,.35,.2),0x564533,0,-.2,.2);
+add(rifle,new THREE.BoxGeometry(.1,.1,.35),0x62686b,0,.13,-.58);
+rifle.position.set(.5,1.55,-.5);body.add(rifle);
+let hasHelmet=true,hasPack=true,poseMode=0,view=0;
+window.changeColor=(c,b)=>{
+clothes[0].material.color.setHex(c);
+clothes[3].material.color.setHex(c);
+clothes[4].material.color.setHex(c);
+document.querySelectorAll(".left button").forEach(x=>x.classList.remove("active"));
+b.classList.add("active");
+};
+window.helmet=()=>{
+hasHelmet=!hasHelmet;hat.visible=hasHelmet;visor.visible=hasHelmet;
+};
+window.backpack=()=>{hasPack=!hasPack;pack.visible=hasPack};
+window.pose=()=>{poseMode=(poseMode+1)%3};
+window.rotate=()=>{view=(view+1)%3};
+let t=0;
+function animate(){
+requestAnimationFrame(animate);t+=.016;
+hero.position.y=Math.sin(t*2)*.035;
+hero.rotation.y=Math.sin(t*.4)*.1;
+body.rotation.z=poseMode===1?.12:poseMode===2?-.12:0;
+if(view===0)camera.position.set(5,3.2,8);
+if(view===1)camera.position.set(8,2.7,1);
+if(view===2)camera.position.set(0,3,9);
+camera.lookAt(0,1.3,0);
+renderer.render(scene,camera);
+}
+animate();
+addEventListener("resize",()=>{
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+});
+}
+</script>
+</body>
+</html>
