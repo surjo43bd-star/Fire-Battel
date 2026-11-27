@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIRE BATTEL</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#07101c;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:22px;text-align:center;
+ background:#101e30;
+ border-bottom:2px solid #ff8b20;
+}
+.logo{font-size:32px;font-weight:900;color:#ff9d35}
+.subtitle{color:#9baec3;font-size:12px}
+main{padding:20px;max-width:850px;margin:auto}
+.card{
+ background:#13243a;border-radius:16px;
+ padding:20px;margin:15px 0;
+ border:1px solid #29415b;
+}
+h2{color:#ffad45}
+button{
+ background:linear-gradient(90deg,#ff671f,#ffad32);
+ color:#111;border:0;padding:14px 25px;
+ border-radius:9px;font-weight:bold;
+ font-size:16px;cursor:pointer;
+}
+button:active{transform:scale(.97)}
+.stats{display:flex;justify-content:space-around}
+.stat{text-align:center}
+.stat strong{display:block;color:#ffb347;font-size:22px}
+#game{display:none;text-align:center}
+canvas{
+ width:100%;max-width:600px;
+ background:#244d38;border-radius:12px;
+ border:2px solid #ff9d35;
+ touch-action:none;
+}
+.controls{display:flex;justify-content:center;
+gap:12px;margin-top:12px;flex-wrap:wrap}
+.controls button{min-width:65px}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">🔥 FIRE BATTEL</div>
+ <div class="subtitle">BANGLADESH SURVIVAL PROJECT</div>
+</header>
+
+<main>
+<section id="lobby">
+ <div class="card">
+  <h2>WELCOME TO FIRE BATTEL</h2>
+  <p>Your adventure begins in Bangladesh.</p>
+  <div class="stats">
+   <div class="stat"><strong>100</strong>Diamonds</div>
+   <div class="stat"><strong>01</strong>Player</div>
+   <div class="stat"><strong>BD</strong>Map</div>
+  </div>
+ </div>
+
+ <div class="card">
+  <h2>🇧🇩 BANGLADESH MAP</h2>
+  <p>Explore the green fields, rivers and villages.</p>
+  <button onclick="startGame()">PLAY NOW</button>
+ </div>
+
+ <div class="card">
+  <h2>COLLECTION</h2>
+  <p>Character Collection • Outfit Collection</p>
+  <p>Coming Soon</p>
+ </div>
+
+ <div class="card">
+  <h2>DIAMOND STORE 💎</h2>
+  <p>100 Diamonds — ৳100</p>
+  <p>200 Diamonds — ৳200</p>
+  <p>500 Diamonds — ৳500</p>
+  <p>1000 Diamonds — ৳1000</p>
+ </div>
+</section>
+
+<section id="game">
+ <h2>BANGLADESH SURVIVAL</h2>
+ <p>Move around and collect energy gems!</p>
+ <canvas id="map" width="600" height="400"></canvas>
+ <div class="controls">
+  <button onclick="move(0,-15)">▲</button>
+  <button onclick="move(-15,0)">◀</button>
+  <button onclick="move(15,0)">▶</button>
+  <button onclick="move(0,15)">▼</button>
+ </div>
+ <p id="score">Gems: 0</p>
+ <button onclick="back()">BACK TO LOBBY</button>
+</section>
+</main>
+
+<script>
+const canvas=document.getElementById("map");
+const ctx=canvas.getContext("2d");
+let player={x:300,y:200};
+let gems=[{x:100,y:100},{x:450,y:120},
+{x:180,y:320},{x:500,y:300}];
+let score=0;
+
+function startGame(){
+ document.getElementById("lobby").style.display="none";
+ document.getElementById("game").style.display="block";
+ draw();
+}
+function back(){
+ document.getElementById("game").style.display="none";
+ document.getElementById("lobby").style.display="block";
+}
+function move(dx,dy){
+ player.x=Math.max(12,Math.min(588,player.x+dx));
+ player.y=Math.max(12,Math.min(388,player.y+dy));
+ gems=gems.filter(g=>{
+  if(Math.hypot(g.x-player.x,g.y-player.y)<22){
+   score++;return false;
+  }
+  return true;
+ });
+ document.getElementById("score").textContent="Gems: "+score;
+ draw();
+}
+function draw(){
+ ctx.fillStyle="#244d38";
+ ctx.fillRect(0,0,600,400);
+
+ ctx.strokeStyle="#639c69";
+ ctx.lineWidth=25;
+ ctx.beginPath();
+ ctx.moveTo(0,90);ctx.lineTo(200,150);
+ ctx.lineTo(380,120);ctx.lineTo(600,210);
+ ctx.stroke();
+
+ ctx.fillStyle="#287fa0";
+ ctx.fillRect(0,265,600,35);
+
+ gems.forEach(g=>{
+  ctx.fillStyle="#48dfff";
+  ctx.beginPath();ctx.arc(g.x,g.y,9,0,Math.PI*2);
+  ctx.fill();
+ });
+ ctx.fillStyle="#ffb13b";
+ ctx.beginPath();
+ ctx.arc(player.x,player.y,12,0,Math.PI*2);
+ ctx.fill();
+ ctx.fillStyle="white";
+ ctx.fillText("PLAYER",player.x-20,player.y-19);
+}
+</script>
+</body>
+</html>
