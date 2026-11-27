@@ -4,91 +4,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FIRE BATTEL</title>
+<title>FIRE BATTEL V2</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#07101c;color:white;
+ margin:0;background:#080e19;color:white;
  font-family:Arial,sans-serif;
 }
 header{
- padding:22px;text-align:center;
- background:#101e30;
- border-bottom:2px solid #ff8b20;
+ display:flex;justify-content:space-between;
+ align-items:center;padding:17px 5%;
+ background:#111d2e;border-bottom:2px solid #ff8c28;
 }
-.logo{font-size:32px;font-weight:900;color:#ff9d35}
-.subtitle{color:#9baec3;font-size:12px}
-main{padding:20px;max-width:850px;margin:auto}
-.card{
- background:#13243a;border-radius:16px;
- padding:20px;margin:15px 0;
- border:1px solid #29415b;
+.logo{font-size:25px;font-weight:900;color:#ff9b32}
+.wallet{
+ background:#1b2b42;padding:12px 16px;
+ border-radius:12px;color:#55d9ff;font-weight:bold
 }
-h2{color:#ffad45}
+main{max-width:1100px;margin:auto;padding:20px}
+.profile{
+ display:flex;align-items:center;gap:15px;
+ background:#15243a;padding:16px;border-radius:15px
+}
+.avatar{
+ width:65px;height:65px;border-radius:50%;
+ background:linear-gradient(140deg,#ffb13b,#e94d20);
+ display:grid;place-items:center;font-size:32px
+}
+.hero{
+ margin-top:20px;padding:35px 20px;
+ text-align:center;border-radius:18px;
+ background:linear-gradient(140deg,#173f45,#13243c,#361b27);
+ border:1px solid #53616a;
+}
+.hero h1{font-size:38px;color:#ffae42}
+.hero p{color:#bdc9d6}
 button{
- background:linear-gradient(90deg,#ff671f,#ffad32);
- color:#111;border:0;padding:14px 25px;
- border-radius:9px;font-weight:bold;
- font-size:16px;cursor:pointer;
+ border:0;border-radius:10px;padding:14px 22px;
+ background:linear-gradient(90deg,#ff6825,#ffb337);
+ color:#111;font-size:15px;font-weight:bold;
+ cursor:pointer
 }
-button:active{transform:scale(.97)}
-.stats{display:flex;justify-content:space-around}
-.stat{text-align:center}
-.stat strong{display:block;color:#ffb347;font-size:22px}
+section{margin-top:25px}
+h2{color:#ffad42}
+.grid{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:14px
+}
+.item{
+ padding:20px;background:#14243a;
+ border:1px solid #2c405a;border-radius:14px;
+ text-align:center
+}
+.symbol{font-size:35px;margin-bottom:10px}
+.item p{color:#aabbd0}
+.price{color:#57d8ff;font-weight:bold}
 #game{display:none;text-align:center}
 canvas{
- width:100%;max-width:600px;
- background:#244d38;border-radius:12px;
- border:2px solid #ff9d35;
- touch-action:none;
+ width:100%;max-width:650px;
+ border-radius:14px;border:2px solid #ff9d35;
+ background:#244d38;touch-action:none
 }
 .controls{display:flex;justify-content:center;
-gap:12px;margin-top:12px;flex-wrap:wrap}
-.controls button{min-width:65px}
+ flex-wrap:wrap;gap:10px;margin:12px}
+.controls button{min-width:60px}
+footer{text-align:center;color:#708096;padding:25px}
+@media(max-width:550px){
+ .grid{grid-template-columns:1fr}
+ .hero h1{font-size:29px}
+ header{padding:15px}
+}
 </style>
 </head>
 <body>
 <header>
  <div class="logo">🔥 FIRE BATTEL</div>
- <div class="subtitle">BANGLADESH SURVIVAL PROJECT</div>
+ <div class="wallet">💎 <span id="diamonds">100</span></div>
 </header>
 
 <main>
-<section id="lobby">
- <div class="card">
-  <h2>WELCOME TO FIRE BATTEL</h2>
-  <p>Your adventure begins in Bangladesh.</p>
-  <div class="stats">
-   <div class="stat"><strong>100</strong>Diamonds</div>
-   <div class="stat"><strong>01</strong>Player</div>
-   <div class="stat"><strong>BD</strong>Map</div>
+<div id="lobby">
+ <div class="profile">
+  <div class="avatar">🪖</div>
+  <div>
+   <b>PLAYER 001</b>
+   <p style="margin:6px 0;color:#9eafc3">Level 01 | Bangladesh</p>
   </div>
  </div>
 
- <div class="card">
-  <h2>🇧🇩 BANGLADESH MAP</h2>
-  <p>Explore the green fields, rivers and villages.</p>
-  <button onclick="startGame()">PLAY NOW</button>
+ <div class="hero">
+  <h1>FIRE BATTEL</h1>
+  <p>WELCOME TO BANGLADESH SURVIVAL ISLAND</p>
+  <p>Explore • Survive • Collect</p>
+  <button onclick="startGame()">▶ PLAY NOW</button>
  </div>
 
- <div class="card">
-  <h2>COLLECTION</h2>
-  <p>Character Collection • Outfit Collection</p>
-  <p>Coming Soon</p>
- </div>
+ <section>
+  <h2>🎮 GAME MODES</h2>
+  <div class="grid">
+   <div class="item">
+    <div class="symbol">🏝️</div>
+    <b>Survival Island</b>
+    <p>Explore Bangladesh</p>
+   </div>
+   <div class="item">
+    <div class="symbol">🎯</div>
+    <b>Training Ground</b>
+    <p>Practice movement</p>
+   </div>
+  </div>
+ </section>
 
- <div class="card">
-  <h2>DIAMOND STORE 💎</h2>
-  <p>100 Diamonds — ৳100</p>
-  <p>200 Diamonds — ৳200</p>
-  <p>500 Diamonds — ৳500</p>
-  <p>1000 Diamonds — ৳1000</p>
- </div>
-</section>
+ <section>
+  <h2>👑 COLLECTION</h2>
+  <div class="grid">
+   <div class="item">
+    <div class="symbol">🪖</div>
+    <b>Characters</b>
+    <p>Player Collection</p>
+   </div>
+   <div class="item">
+    <div class="symbol">👕</div>
+    <b>Outfits</b>
+    <p>Premium Clothing</p>
+   </div>
+   <div class="item">
+    <div class="symbol">🔫</div>
+    <b>Weapon Skins</b>
+    <p>Weapon Collection</p>
+   </div>
+   <div class="item">
+    <div class="symbol">🎒</div>
+    <b>Backpacks</b>
+    <p>Equipment Collection</p>
+   </div>
+  </div>
+ </section>
 
-<section id="game">
- <h2>BANGLADESH SURVIVAL</h2>
- <p>Move around and collect energy gems!</p>
+ <section>
+  <h2>💎 DIAMOND STORE</h2>
+  <div class="grid">
+   <div class="item">
+    <div class="symbol">💎</div>
+    <b>100 Diamonds</b>
+    <p class="price">৳100</p>
+    <button onclick="buy(100)">BUY</button>
+   </div>
+   <div class="item">
+    <div class="symbol">💎</div>
+    <b>200 Diamonds</b>
+    <p class="price">৳200</p>
+    <button onclick="buy(200)">BUY</button>
+   </div>
+   <div class="item">
+    <div class="symbol">💎</div>
+    <b>500 Diamonds</b>
+    <p class="price">৳500</p>
+    <button onclick="buy(500)">BUY</button>
+   </div>
+   <div class="item">
+    <div class="symbol">💎</div>
+    <b>1000 Diamonds</b>
+    <p class="price">৳1000</p>
+    <button onclick="buy(1000)">BUY</button>
+   </div>
+  </div>
+ </section>
+</div>
+
+<div id="game">
+ <h2>🇧🇩 BANGLADESH SURVIVAL</h2>
+ <p>Move your character around the island!</p>
  <canvas id="map" width="600" height="400"></canvas>
  <div class="controls">
   <button onclick="move(0,-15)">▲</button>
@@ -96,19 +182,22 @@ gap:12px;margin-top:12px;flex-wrap:wrap}
   <button onclick="move(15,0)">▶</button>
   <button onclick="move(0,15)">▼</button>
  </div>
- <p id="score">Gems: 0</p>
+ <p id="score">Gems collected: 0</p>
  <button onclick="back()">BACK TO LOBBY</button>
-</section>
+</div>
 </main>
+<footer>FIRE BATTEL © 2026 | INDEPENDENT GAME PROJECT</footer>
 
 <script>
-const canvas=document.getElementById("map");
-const ctx=canvas.getContext("2d");
+let diamonds=100;
+let score=0;
 let player={x:300,y:200};
 let gems=[{x:100,y:100},{x:450,y:120},
 {x:180,y:320},{x:500,y:300}];
-let score=0;
 
+function buy(amount){
+ alert("Diamond purchases are not active yet. Please wait for the secure payment system.");
+}
 function startGame(){
  document.getElementById("lobby").style.display="none";
  document.getElementById("game").style.display="block";
@@ -127,23 +216,23 @@ function move(dx,dy){
   }
   return true;
  });
- document.getElementById("score").textContent="Gems: "+score;
+ document.getElementById("score").textContent=
+ "Gems collected: "+score;
  draw();
 }
 function draw(){
- ctx.fillStyle="#244d38";
+ const c=document.getElementById("map");
+ const ctx=c.getContext("2d");
+ ctx.fillStyle="#315b3c";
  ctx.fillRect(0,0,600,400);
-
- ctx.strokeStyle="#639c69";
+ ctx.fillStyle="#277c9a";
+ ctx.fillRect(0,265,600,35);
+ ctx.strokeStyle="#78a86b";
  ctx.lineWidth=25;
  ctx.beginPath();
  ctx.moveTo(0,90);ctx.lineTo(200,150);
  ctx.lineTo(380,120);ctx.lineTo(600,210);
  ctx.stroke();
-
- ctx.fillStyle="#287fa0";
- ctx.fillRect(0,265,600,35);
-
  gems.forEach(g=>{
   ctx.fillStyle="#48dfff";
   ctx.beginPath();ctx.arc(g.x,g.y,9,0,Math.PI*2);
