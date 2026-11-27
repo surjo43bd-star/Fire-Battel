@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIRE BATTEL - 3D Lobby</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#101b20;font-family:Arial;color:white}
+#game{position:fixed;inset:0}
+#ui{position:fixed;inset:0;pointer-events:none}
+.top{display:flex;justify-content:space-between;padding:20px;background:linear-gradient(#07111bd9,transparent)}
+.logo{font-size:25px;font-weight:900;color:#ffad36;letter-spacing:3px}
+.diamonds{background:#15283ad9;padding:12px 18px;border-radius:20px}
+.panel{position:absolute;left:22px;bottom:25px;background:#0a172bdc;padding:18px;border:1px solid #71839755;border-radius:12px}
+.panel h2{margin:0 0 8px;color:#ffb34b}
+.panel p{margin:5px 0;color:#d2dce6}
+.buttons{position:absolute;right:25px;bottom:28px;display:grid;gap:10px;width:180px;pointer-events:auto}
+button{padding:14px;border:1px solid #ffcf75;background:#17283de8;color:white;font-weight:bold;border-radius:8px;cursor:pointer}
+button.play{background:#ed9226;color:#111;font-size:18px}
+button:hover{filter:brightness(1.25)}
+#loading{position:absolute;inset:0;display:grid;place-items:center;background:#101b20;z-index:5;font-size:20px}
+#hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;color:#d5e0e9}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="loading">LOADING FIRE BATTEL 3D...</div>
+<div id="ui">
+ <div class="top">
+  <div class="logo">🔥 FIRE BATTEL</div>
+  <div class="diamonds">💎 100</div>
+ </div>
+ <div class="panel">
+  <h2>BANGLADESH CAMP</h2>
+  <p>Mode: Battle Royale</p>
+  <p>Region: Bangladesh</p>
+  <p>Character: SURVIVOR 01</p>
+ </div>
+ <div class="buttons">
+  <button class="play" onclick="alert('Battle mode will be added in the next update!')">▶ START GAME</button>
+  <button onclick="alert('Character Collection - Coming Soon')">CHARACTERS</button>
+  <button onclick="alert('Weapon Collection - Coming Soon')">GUN COLLECTION</button>
+  <button onclick="alert('Store - Coming Soon')">DIAMOND STORE</button>
+ </div>
+ <div id="hint">3D LOBBY • FIRE BATTEL</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+<script>
+(function(){
+const container=document.getElementById("game");
+if(!window.THREE){
+ document.getElementById("loading").textContent="3D library could not load. Check your internet connection.";
+ return;
+}
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x9bc5d0);
+scene.fog=new THREE.Fog(0x9bc5d0,35,110);
+
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,200);
+camera.position.set(8,6,11);
+camera.lookAt(0,1,0);
+
+let renderer;
+try{
+ renderer=new THREE.WebGLRenderer({antialias:false});
+}catch(e){
+ document.getElementById("loading").textContent="Your browser or graphics card could not start 3D mode.";
+ return;
+}
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(1);
+renderer.shadowMap.enabled=false;
+container.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xdaf1ff,0x536044,1.5));
+const sun=new THREE.DirectionalLight(0xffe1ae,1.4);
+sun.position.set(-8,15,8);
+scene.add(sun);
+
+function material(color){return new THREE.MeshLambertMaterial({color});}
+function box(x,y,z,sx,sy,sz,color){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material(color));
+ m.position.set(x,y,z);scene.add(m);return m;
+}
+function cylinder(x,y,z,r1,r2,h,color){
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,7),material(color));
+ m.position.set(x,y,z);scene.add(m);return m;
+}
+
+// Ground
+box(0,-.35,0,100,.5,100,0x456b3d);
+
+// River
+box(-14,-.07,-8,15,.12,75,0x398eaa);
+
+// Hills
+for(let i=0;i<8;i++){
+ const h=new THREE.Mesh(
+  new THREE.ConeGeometry(9+i%3,13+i%4,7),
+  material(i%2?0x496d48:0x567e53)
+ );
+ h.position.set(-29+i*9,5,-37-i%3*4);
+ scene.add(h);
+}
+
+// Camp road
+box(0,-.08,7,7,.12,45,0x6c6a5d);
+
+// Camp buildings
+box(-8,1.5,1,7,3,5,0xaaa58b);
+box(-8,3.2,1,7,.35,5,0x475448);
+box(-8,2.1,3.56,1.2,1.5,.08,0x35414a);
+box(8,1.3,-4,5,2.6,5,0x8d9b79);
+box(8,2.8,-4,5,.3,5,0x384b3d);
+
+// Trees
+for(let i=0;i<35;i++){
+ let x=(Math.random()-.5)*65;
+ let z=(Math.random()-.5)*65;
+ if(Math.abs(x)<12 && z> -12 && z<14)continue;
+ cylinder(x,.65,z,.23,.32,1.3,0x63452c);
+ const leaves=new THREE.Mesh(new THREE.ConeGeometry(1.5,3,6),material(0x245536));
+ leaves.position.set(x,2.7,z);scene.add(leaves);
+}
+
+// Camp watch towers
+for(let x of [-17,17]){
+ box(x,2,0,.45,4,.45,0x544b39);
+ box(x,4.1,0,3,.3,3,0x625b45);
+}
+
+// Flag pole and Bangladesh-inspired flag
+cylinder(-3,3,-3,.07,.07,6,0xc5c5c5);
+box(-2.2,4.7,-3,1.7,1,.08,0x087d45);
+const red=new THREE.Mesh(new THREE.CircleGeometry(.25,16),material(0xe22d35));
+red.position.set(-2.2,4.7,-2.94);scene.add(red);
+
+// 3D Character
+const character=new THREE.Group();
+scene.add(character);
+function part(parent,geo,color,x,y,z){
+ const m=new THREE.Mesh(geo,material(color));
+ m.position.set(x,y,z);parent.add(m);return m;
+}
+part(character,new THREE.BoxGeometry(.85,1.15,.45),0x3d6346,0,1.55,0);
+part(character,new THREE.SphereGeometry(.35,10,8),0xb77d54,0,2.45,0);
+part(character,new THREE.BoxGeometry(.75,.2,.5),0x26382b,0,2.67,0);
+part(character,new THREE.BoxGeometry(.3,.75,.35),0x3d6346,-.58,1.55,0);
+part(character,new THREE.BoxGeometry(.3,.75,.35),0x3d6346,.58,1.55,0);
+part(character,new THREE.BoxGeometry(.35,.85,.38),0x293748,-.25,.55,0);
+part(character,new THREE.BoxGeometry(.35,.85,.38),0x293748,.25,.55,0);
+part(character,new THREE.BoxGeometry(.4,.2,.55),0x171c20,-.25,.08,.05);
+part(character,new THREE.BoxGeometry(.4,.2,.55),0x171c20,.25,.08,.05);
+
+// Gun in character's hands
+const gun=new THREE.Group();
+part(gun,new THREE.BoxGeometry(.16,.17,1.2),0x20272a,0,0,0);
+part(gun,new THREE.BoxGeometry(.13,.42,.18),0x4b4233,0,-.22,.2);
+part(gun,new THREE.BoxGeometry(.12,.12,.4),0x454c4c,0,.13,-.65);
+gun.position.set(.48,1.75,-.4);
+gun.rotation.x=-.1;
+character.add(gun);
+character.position.set(0,0,2);
+
+// Animated character movement
+let t=0;
+function animate(){
+ requestAnimationFrame(animate);
+ t+=.015;
+ character.position.y=Math.sin(t)*.035;
+ character.rotation.y=Math.sin(t*.5)*.07;
+ camera.position.x=8+Math.sin(t*.18)*.6;
+ camera.lookAt(0,1.4,0);
+ renderer.render(scene,camera);
+}
+animate();
+
+document.getElementById("loading").style.display="none";
+addEventListener("resize",()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+})();
+</script>
+</body>
+</html>
